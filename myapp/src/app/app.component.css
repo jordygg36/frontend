@@ -1,0 +1,92 @@
+/* Estilos para la barra de navegación */
+nav {
+    background: linear-gradient(to right, #ff0000, #0056b3); /* Gradiente de rojo a azul */
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+    position: relative;
+    z-index: 10;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    gap: 1rem; /* Espaciado uniforme entre elementos */
+}
+
+nav li {
+    margin: 0;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem; /* Tamaño de fuente un poco mayor */
+    padding: 0.6rem 1.2rem;
+    border-radius: 5px;
+    position: relative;
+    transition: color 0.3s, transform 0.2s ease; /* Transición para suavizar el hover */
+}
+
+/* Efecto hover con subrayado dinámico */
+nav a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: white;
+    transition: width 0.3s, left 0.3s;
+}
+
+/* Expande el subrayado dinámico */
+nav a:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+nav a:hover {
+    color: #ffebcd; /* Cambia el color del texto en hover */
+    transform: scale(1.05); /* Agranda ligeramente el enlace */
+}
+
+/* Estilos para el enlace activo */
+nav a.active {
+    background-color: rgba(255, 255, 255, 0.3);
+    font-weight: bold;
+    border: 1px solid #ffffff;
+}
+/* Fondo de página gris elegante */
+body {
+    background-color: #e6e6e6; /* Fondo gris claro */
+    font-family: 'Helvetica Neue', sans-serif; /* Fuente moderna y elegante */
+    color: #333333; /* Color de texto gris oscuro */
+    margin: 0;
+    padding: 0;
+}
+
+/* Fondo con degradado gris y sutil textura */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #ffffff25, #ffffff25); /* Degradado suave en gris */
+    opacity: 0.9;
+    z-index: -1;
+}
+
+/* Sombra sutil para el contenedor */
+.container {
+    
+    margin: 1rem auto;
+    padding: 1rem;
+    background-color: #ffffff25; /* Fondo blanco para destacar contenido */
+    border-radius: 10px; /* Bordes suaves */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Sombra elegante */
+}
