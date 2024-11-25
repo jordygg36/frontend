@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine } from '@angular/ssr';
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
@@ -18,13 +18,16 @@ export function app(): express.Express {
   server.set('views', browserDistFolder);
 
   // Serve static files from /browser
-  server.get('**', express.static(browserDistFolder, {
-    maxAge: '1y',
-    index: 'index.html',
-  }));
+  server.get(
+    '**',
+    express.static(browserDistFolder, {
+      maxAge: '1y',
+      index: 'index.html',
+    })
+  );
 
   // All regular routes use the Angular engine
-  server.get('**', (req, res, next) => {
+  server.get('**', (req: Request, res: Response, next: NextFunction) => {
     const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'; // Use HTTPS in production
     const host = process.env.HOST || 'localhost'; // Default to localhost if not defined
     const port = process.env.PORT || 4000; // Default port
