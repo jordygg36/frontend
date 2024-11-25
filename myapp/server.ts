@@ -5,41 +5,41 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
 
-// El servidor de Express es exportado para que pueda ser utilizado por funciones serverless.
+// The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
   const server = express();
-
-  // Ruta al directorio de dist
   const serverDistFolder = dirname(fileURLToPath(import.meta.url));
   const browserDistFolder = resolve(serverDistFolder, '../browser');
   const indexHtml = join(serverDistFolder, 'index.server.html');
 
   const commonEngine = new CommonEngine();
 
-  // Establecer el motor de vistas a HTML
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
 
-  // Servir archivos estáticos desde el directorio /browser
+  // Serve static files from /browser
   server.get('**', express.static(browserDistFolder, {
     maxAge: '1y',
     index: 'index.html',
   }));
 
-  // Todas las rutas regulares usan el motor de Angular
+  // All regular routes use the Angular engine
   server.get('**', (req, res, next) => {
-    const { protocol, originalUrl, baseUrl, headers } = req;
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'; // Use HTTPS in production
+    const host = process.env.HOST || 'localhost'; // Default to localhost if not defined
+    const port = process.env.PORT || 4000; // Default port
+    const baseUrl = process.env.BASE_URL || 'https://frontend-xzm4.onrender.com/'; // Default to the specified link
 
-    // Usar el hostname de Render en lugar de localhost
-    const baseHost = process.env.RENDER_EXTERNAL_HOSTNAME || headers.host;
-    
+    const url = `${protocol}://${host}:${port}${req.originalUrl}`;
+    const useUrl = process.env.NODE_ENV === 'production' ? baseUrl + req.originalUrl : url; // Use baseUrl in production
+
     commonEngine
       .render({
         bootstrap,
         documentFilePath: indexHtml,
-        url: `https://frontend-xzm4.onrender.com/`, // Aquí se establece la URL completa
+        url: useUrl,
         publicPath: browserDistFolder,
-        providers: [{ provide: APP_BASE_HREF, useValue: '/' }], // Establecer base href como la raíz
+        providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
       })
       .then((html) => res.send(html))
       .catch((err) => next(err));
@@ -49,9 +49,9 @@ export function app(): express.Express {
 }
 
 function run(): void {
-  const port = process.env.PORT || 4000; // Usa el puerto asignado por Render
+  const port = process.env.PORT || 4000;
 
-  // Iniciar el servidor Node
+  // Start up the Node server
   const server = app();
   server.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
