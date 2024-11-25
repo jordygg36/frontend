@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine } from '@angular/ssr';
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
@@ -18,23 +18,20 @@ export function app(): express.Express {
   server.set('views', browserDistFolder);
 
   // Serve static files from /browser
-  server.get(
-    '**',
-    express.static(browserDistFolder, {
-      maxAge: '1y',
-      index: 'index.html',
-    })
-  );
+  server.get('**', express.static(browserDistFolder, {
+    maxAge: '1y',
+    index: 'index.html',
+  }));
 
   // All regular routes use the Angular engine
-  server.get('**', (req: Request, res: Response, next: NextFunction) => {
-    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'; // Use HTTPS in production
-    const host = process.env.HOST || 'localhost'; // Default to localhost if not defined
-    const port = process.env.PORT || 4000; // Default port
-    const baseUrl = process.env.BASE_URL || 'https://frontend-xzm4.onrender.com/'; // Default to the specified link
+  server.get('**', (req, res, next) => {
+    const protocol = process.env['NODE_ENV'] === 'production' ? 'https' : 'http'; // Use HTTPS in production
+    const host = process.env['HOST'] || 'localhost'; // Default to localhost if not defined
+    const port = process.env['PORT'] || 4000; // Default port
+    const baseUrl = process.env['BASE_URL'] || 'https://frontend-xzm4.onrender.com/'; // Default to the specified link
 
     const url = `${protocol}://${host}:${port}${req.originalUrl}`;
-    const useUrl = process.env.NODE_ENV === 'production' ? baseUrl + req.originalUrl : url; // Use baseUrl in production
+    const useUrl = process.env['NODE_ENV'] === 'production' ? baseUrl + req.originalUrl : url; // Use baseUrl in production
 
     commonEngine
       .render({
@@ -52,7 +49,7 @@ export function app(): express.Express {
 }
 
 function run(): void {
-  const port = process.env.PORT || 4000;
+  const port = process.env['PORT'] || 4000;
 
   // Start up the Node server
   const server = app();
