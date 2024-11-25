@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class OrganismoService {
-  URL = 'http://localhost:3000/api/organismo';
+  URL = 'https://backend-o3wd.onrender.com/api/organismo';
 
   constructor(private http: HttpClient) {}
 
