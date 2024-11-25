@@ -17,6 +17,8 @@ export function app(): express.Express {
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
 
+  // Example Express Rest API endpoints
+  // server.get('/api/**', (req, res) => { });
   // Serve static files from /browser
   server.get('**', express.static(browserDistFolder, {
     maxAge: '1y',
@@ -25,19 +27,13 @@ export function app(): express.Express {
 
   // All regular routes use the Angular engine
   server.get('**', (req, res, next) => {
-    const protocol = process.env['NODE_ENV'] === 'production' ? 'https' : 'http'; // Use HTTPS in production
-    const host = process.env['HOST'] || 'localhost'; // Default to localhost if not defined
-    const port = process.env['PORT'] || 4000; // Default port
-    const baseUrl = process.env['BASE_URL'] || 'https://frontend-xzm4.onrender.com/'; // Default to the specified link
-
-    const url = `${protocol}://${host}:${port}${req.originalUrl}`;
-    const useUrl = process.env['NODE_ENV'] === 'production' ? baseUrl + req.originalUrl : url; // Use baseUrl in production
+    const { protocol, originalUrl, baseUrl, headers } = req;
 
     commonEngine
       .render({
         bootstrap,
         documentFilePath: indexHtml,
-        url: useUrl,
+        url: `${protocol}://${headers.host}${originalUrl}`,
         publicPath: browserDistFolder,
         providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
       })
