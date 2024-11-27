@@ -1,0 +1,11 @@
+{
+  "routes": [
+    "/agregar-organismo",
+    "/agregar-usuario",
+    "/contenido",
+    "/inicio",
+    "/organismo",
+    "/regresar",
+    "/usuario"
+  ]
+}
