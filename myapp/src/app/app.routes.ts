@@ -13,7 +13,7 @@ export const routes: Routes = [
   { path: 'editar-usuario/:id_usuario', component: EditUserComponent },
   { path: 'editar-organismo/:id_organismo', component: EditOrganismoComponent },
   { path: 'contenido', component: ContenidoComponent },
-  { path: 'browser/organismo', component: OrganismoComponent},
+  { path: 'organismo', component: OrganismoComponent},
   { path: 'agregar-usuario', component: AddUserComponent },
   { path: 'agregar-organismo', component: AddOrganismoComponent },
   { path: 'regresar', component: UsersComponent },
