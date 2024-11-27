@@ -2,3 +2,6 @@
   from = "/*"
   to = "/index.html"
   status = 200
+[build]
+  command = "npm install -g @angular/cli && npm run build"
+  publish = "dist/<nombre-de-tu-proyecto>"
